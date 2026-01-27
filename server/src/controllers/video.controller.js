@@ -27,8 +27,10 @@ const uploadVideo = asyncHandler(async (req, res) => {
     throw new ApiError(403, "Thumbnail is required");
   }
 
-  const videoUpload = await uploadOnCloudinary(videoLocalPath);
-  const thumbnailUpload = await uploadOnCloudinary(thumbnailLocalPath);
+  const [videoUpload, thumbnailUpload] = await Promise.all([
+    uploadOnCloudinary(videoLocalPath),
+    uploadOnCloudinary(thumbnailLocalPath)
+  ]);
 
   if (!thumbnailUpload?.url) {
     throw new ApiError(501, "Thumbnail upload failed");

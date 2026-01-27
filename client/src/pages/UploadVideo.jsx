@@ -59,3 +59,12 @@ export default function UploadVideo() {
     </div>
   );
 }
+
+// axios.post(url, formData, {
+//   onUploadProgress: (progressEvent) => {
+//     const percent = Math.round(
+//       (progressEvent.loaded * 100) / progressEvent.total
+//     );
+//     setUploadPercent(percent);
+//   }
+// });

@@ -48,6 +48,8 @@ const registerUser = asyncHandler( async(req, res)=>{
         $or: [ { email }, { username } ]
     })
     if(existedUser) {
+        if (avatarLocalPath) fs.unlinkSync(avatarLocalPath);
+        if (coverImageLocalPath) fs.existsSync(coverImageLocalPath) && fs.unlinkSync(coverImageLocalPath);
         throw new ApiError(409, "User already existed");
     }
 
@@ -95,11 +97,11 @@ const loginUser = asyncHandler(async (req, res) =>{
     //access and referesh token
     //send cookie
 
-    const {email, username, password} = req.body
-    console.log(email);
+    const {email, password} = req.body
+    // console.log(email);
 
-    if (!username && !email) {
-        throw new ApiError(400, "username or email is required")
+    if (!email) {
+        throw new ApiError(400, "email is required")
     }
     
     // Here is an alternative of above code based on logic discussed in video:
@@ -109,7 +111,8 @@ const loginUser = asyncHandler(async (req, res) =>{
     // }
 
     const user = await User.findOne({
-        $or: [{username}, {email}]
+        // $or: [{username}, {email}]
+        email
     })
 
     if (!user) {
