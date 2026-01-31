@@ -12,7 +12,7 @@ export default function Profile() {
   if (!user) return <p className="p-6">Loading...</p>;
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100">
+    <div className="pt-20 min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100">
 
       {/* Header */}
       <div className="flex gap-6 items-center p-6 border-b border-slate-200 dark:border-slate-800">

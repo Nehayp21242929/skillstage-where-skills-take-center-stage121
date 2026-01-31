@@ -26,7 +26,7 @@ export default function Photos () {
     return <p className="text-slate-500">No uploads yet</p>;
 
   return (
-    <div className="p-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 bg-blue-50 dark:bg-black">
+    <div className="pt-25 px-10 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 bg-blue-50 dark:bg-black">
       {photos.map((photo) => (
         <Link
           to={`/Open/${photo._id}`}

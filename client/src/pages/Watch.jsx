@@ -29,7 +29,7 @@ const Watch = () => {
   if (!video) return <p className="p-6">Video not found</p>
 
   return (
-    <div className="p-6 bg-white dark:bg-black min-h-screen">
+    <div className="pt-20 bg-white dark:bg-black min-h-screen">
 
       <div className="max-w-5xl mx-auto">
 

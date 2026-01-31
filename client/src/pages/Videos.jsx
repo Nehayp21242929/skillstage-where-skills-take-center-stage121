@@ -19,7 +19,7 @@ const Videos = () => {
   }, []);
 
   return (
-    <div className="p-6 bg-blue-50 dark:bg-black">
+    <div className="pt-30 px-10 bg-blue-50 dark:bg-black">
       <VideoGrid videos={videos} />
     </div>
   );

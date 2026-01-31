@@ -13,7 +13,7 @@ const Navbar = () => {
   const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
-    <nav className="bg-gray-300 border-white dark:bg-gray-900 px-4 py-3 shadow-md flex items-center justify-between">
+    <nav className="fixed top-0 left-0 w-full bg-gray-300 border-white dark:bg-gray-900 px-4 py-3 shadow-md flex items-center justify-between">
       {/* Left: Brand Name */}
       <div className="flex items-center space-x-4">
         <h2
