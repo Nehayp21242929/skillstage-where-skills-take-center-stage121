@@ -5,6 +5,7 @@ import { asyncHandler } from "../utils/asyncHandler.js";
 import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { uploadOnCloudinary } from "../utils/cloudinary.js";
+import { WatchHistoryPhoto } from "../models/watchedPhoto.model.js";
 
 const uploadPhoto = asyncHandler(async (req, res) => {
   const { title, description,duration } = req.body;
@@ -73,6 +74,58 @@ const getAllPhotos = asyncHandler(async(req,res) => {
   .json(
     new ApiResponse(200, photo, "Photos fetched successfully"));
 })
+
+const addToHistoryPhoto = asyncHandler(async (req, res) => {
+  if (!req.user) {
+    return res.status(401).json({
+      success: false,
+      message: "Unauthorized",
+    });
+  }
+
+  const { photoId, watchTime } = req.body;
+
+  if (!photoId) {
+    return res.status(400).json({
+      success: false,
+      message: "photoId is required",
+    });
+  }
+
+  const history = await WatchHistoryPhoto.findOneAndUpdate(
+    {
+      user: req.user._id,
+      photo: photoId,
+    },
+    {
+      $set: {
+        watchTime: watchTime || 0,
+        watchedAt: new Date(),
+      },
+    },
+    { upsert: true, new: true }
+  );
+
+  res.status(201).json(
+    new ApiResponse(201, history, "Watched video added successfully")
+  );
+});
+
+
+const getHistoryPhoto = asyncHandler(async (req, res) => {
+  const history = await WatchHistoryPhoto.find({
+    user: req.user._id
+  })
+    .populate({
+      path: "photo",
+      select: "photoFile title views createdAt owner"
+    })
+    .sort({ watchedAt: -1 });
+   return res.json(
+    new ApiResponse(200,history,"watched video fetched successfully")
+  );
+});
+
 
 
 /*
@@ -234,7 +287,8 @@ export {
     uploadPhoto,
     galleryPhotoController,
     getPhotoByIdController,
-    getAllPhotos
-    
-    
+    getAllPhotos,
+    addToHistoryPhoto,
+    getHistoryPhoto
+
 }

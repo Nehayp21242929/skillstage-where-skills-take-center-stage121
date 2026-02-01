@@ -21,3 +21,11 @@ export const getPhotoById = (photoId) => {
 export const getChannelPhoto = (userId) => {
   return API.get(`/photos/gallery/${userId}`);
 };
+
+export const getHistoryPhoto =() =>{
+  return API.get(`/photos/getHistory`)
+};
+
+export const addToWatchHistoryPhoto =({ photoId, watchTime }) =>{
+  return API.post(`/photos/addHistory`, { photoId, watchTime })
+};
