@@ -8,7 +8,10 @@ import {
   getVideoByIdController,
   getAllVideos,
   addToHistory,
-  getHistory
+  getHistory,
+  addToLiked,
+  getLiked,
+  deleteLiked
 } from "../controllers/video.controller.js";
 
 import { upload } from "../middlewares/multer.middleware.js";
@@ -38,6 +41,17 @@ router.route("/addHistory").post(verifyJWT, addToHistory);
 
 // get watch history of logged-in user
 router.route("/getHistory").get(verifyJWT, getHistory);
+
+router.route("/addLiked").post(verifyJWT, addToLiked);
+
+
+// get watch history of logged-in user
+router.route("/getLiked").get(verifyJWT, getLiked);
+
+router.route("/deleteLiked/:videoId").delete(verifyJWT,deleteLiked);
+
+
+
 
 
 // // watch page

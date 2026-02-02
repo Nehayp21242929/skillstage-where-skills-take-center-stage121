@@ -6,6 +6,7 @@ import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { uploadOnCloudinary } from "../utils/cloudinary.js";
 import { WatchHistoryVideo } from "../models/watchedVideo.model.js";
+import { likedVideo } from "../models/likedVideo.model.js";
 
 const uploadVideo = asyncHandler(async (req, res) => {
   const { title, description, duration } = req.body;
@@ -136,6 +137,73 @@ const getHistory = asyncHandler(async (req, res) => {
     new ApiResponse(200,history,"watched video fetched successfully")
   );
 });
+
+const addToLiked = asyncHandler(async(req,res) =>{
+  if (!req.user) {
+    return res.status(401).json({
+      success: false,
+      message: "Unauthorized",
+    });
+  }
+
+  const { videoId, watchTime } = req.body;
+
+  if (!videoId) {
+    return res.status(400).json({
+      success: false,
+      message: "videoId is required",
+    });
+  }
+
+  const liked = await likedVideo.findOneAndUpdate(
+    {
+      user: req.user._id,
+      video: videoId,
+    },
+    {
+      $set: {
+        watchTime: watchTime || 0,
+        watchedAt: new Date(),
+      },
+    },
+    { upsert: true, new: true }
+  );
+
+  res.status(201).json(
+    new ApiResponse(201, liked, "liked video added successfully")
+  );
+})
+
+const getLiked = asyncHandler(async(req,res) =>{
+  const likedvideo = await likedVideo.find({user : req.user._id})
+  .populate({
+    path:"video",
+    select: "title thumbnail duration views createdAt owner"
+  })
+  .sort({likedAt:-1});
+  return res
+  .json(
+    new ApiResponse(200,likedvideo,"liked video fetched successfully")
+  );
+})
+
+const deleteLiked = asyncHandler(async (req, res) => {
+  const { videoId } = req.params;
+
+  const deleted = await likedVideo.findOneAndDelete({
+    user: req.user._id,
+    video: videoId,
+  });
+
+  if (!deleted) {
+    return res.status(404).json({ message: "Video not found in liked list" });
+  }
+
+  res.status(200).json({
+    message: "Video removed from liked videos",
+  });
+});
+
 
 
 /*
@@ -299,7 +367,11 @@ export {
     getVideoByIdController,
     getAllVideos,
     addToHistory,
-    getHistory
+    getHistory,
+    addToLiked,
+    getLiked,
+    deleteLiked
+
     
     
 }

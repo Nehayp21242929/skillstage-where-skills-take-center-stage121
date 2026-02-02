@@ -33,3 +33,15 @@ export const getHistoryVideos =() =>{
 export const addToWatchHistoryVideos =({ videoId, watchTime }) =>{
   return API.post(`/videos/addHistory`, { videoId, watchTime })
 };
+
+export const getLikedVideos =() =>{
+  return API.get(`/videos/getLiked`)
+}
+
+export const addToLikedVideos =({ videoId, watchTime }) =>{
+  return API.post(`/videos/addLiked`, { videoId, watchTime })
+};
+
+export const deleteLiked =(videoId)=>{
+  return API.delete(`/videos/deleteLiked/${videoId}`);
+}
