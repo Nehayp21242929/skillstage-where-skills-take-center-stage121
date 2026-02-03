@@ -29,3 +29,16 @@ export const getHistoryPhoto =() =>{
 export const addToWatchHistoryPhoto =({ photoId, watchTime }) =>{
   return API.post(`/photos/addHistory`, { photoId, watchTime })
 };
+
+export const getLikedPhotos =() =>{
+  return API.get(`/photos/getLiked`)
+}
+
+export const addToLikedPhotos =({ photoId}) =>{
+  return API.post(`/photos/addLiked`, { photoId })
+};
+
+export const deleteLikedPhotos =(photoId)=>{
+  return API.delete(`/photos/deleteLiked/${photoId}`);
+}
+

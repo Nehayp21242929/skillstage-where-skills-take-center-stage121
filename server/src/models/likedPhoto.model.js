@@ -15,10 +15,6 @@ const likedSchema = new Schema(
       required: true,
       index: true
     },
-    watchTime: {
-      type: Number, // seconds watched
-      default: 0
-    },
     likedAt: {
       type: Date,
       default: Date.now
@@ -30,7 +26,7 @@ const likedSchema = new Schema(
 // 🔑 Important indexes
 likedSchema.index({ user: 1, video: 1 });
 
-export const liked = mongoose.model(
+export const likedPhoto = mongoose.model(
   "likedPhoto",
   likedSchema
 );

@@ -135,7 +135,7 @@ const addToLikedPhoto = asyncHandler(async(req,res) =>{
     });
   }
 
-  const { photoId,watchTime } = req.body;
+  const { photoId } = req.body;
 
   if (!photoId) {
     return res.status(400).json({
@@ -151,7 +151,6 @@ const addToLikedPhoto = asyncHandler(async(req,res) =>{
     },
     {
       $set: {
-        watchTime: watchTime || 0,
         watchedAt: new Date(),
       },
     },

@@ -5,6 +5,7 @@ import GalleryPhotos from "../profile/GalleryPhotos";
 import WatchedVideos from "../profile/WatchedVideos";
 import WatchedPhotos from "../profile/WatchedPhoto";
 import LikedVideos from "../profile/LikedVideos";
+import LikedPhotos from "../profile/LikedPhotos";
 
 
 
@@ -48,7 +49,7 @@ export default function Profile() {
       <div className="p-6">
         {tab === "gallery" && tab2 === "photos" && <GalleryPhotos userId={user._id} />}
         {tab === "gallery" && tab2 === "videos" && <GalleryVideos userId={user._id} />}
-        {tab === "liked" && tab2 === "photos" && <p>Your liked photos will appear here</p>}
+        {tab === "liked" && tab2 === "photos" &&  <LikedPhotos userId={user._id} /> }
         {tab === "liked" && tab2 === "videos" &&  <LikedVideos userId={user._id} />}
         {tab === "watched" && tab2 === "photos" && <WatchedPhotos userId={user._id} />}
         {tab === "watched" && tab2 === "videos" && <WatchedVideos userId={user._id} />}
