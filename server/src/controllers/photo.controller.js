@@ -6,6 +6,7 @@ import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { uploadOnCloudinary } from "../utils/cloudinary.js";
 import { WatchHistoryPhoto } from "../models/watchedPhoto.model.js";
+import { likedPhoto } from "../models/likedPhoto.model.js";
 
 const uploadPhoto = asyncHandler(async (req, res) => {
   const { title, description,duration } = req.body;
@@ -126,159 +127,73 @@ const getHistoryPhoto = asyncHandler(async (req, res) => {
   );
 });
 
+const addToLikedPhoto = asyncHandler(async(req,res) =>{
+  if (!req.user) {
+    return res.status(401).json({
+      success: false,
+      message: "Unauthorized",
+    });
+  }
+
+  const { photoId,watchTime } = req.body;
+
+  if (!photoId) {
+    return res.status(400).json({
+      success: false,
+      message: "photoId is required",
+    });
+  }
+
+  const liked = await likedPhoto.findOneAndUpdate(
+    {
+      user: req.user._id,
+      photo: photoId
+    },
+    {
+      $set: {
+        watchTime: watchTime || 0,
+        watchedAt: new Date(),
+      },
+    },
+    { upsert: true, new: true }
+  );
+
+  res.status(201).json(
+    new ApiResponse(201, liked, "liked video added successfully")
+  );
+})
+
+const getLikedPhoto = asyncHandler(async(req,res) =>{
+  const likedphoto = await likedPhoto.find({user : req.user._id})
+  .populate({
+    path:"photo",
+    select: "title photoFile views createdAt owner"
+  })
+  .sort({likedAt:-1});
+  return res
+  .json(
+    new ApiResponse(200,likedphoto,"liked photo fetched successfully")
+  );
+})
+
+const deleteLikedPhoto = asyncHandler(async (req, res) => {
+  const { photoId } = req.params;
+
+  const deleted = await likedPhoto.findOneAndDelete({
+    user: req.user._id,
+    photo: photoId,
+  });
+
+  if (!deleted) {
+    return res.status(404).json({ message: "Photo not found in liked list" });
+  }
+
+  res.status(200).json({
+    message: "photo removed from liked photos",
+  });
+});
 
 
-/*
-  GET /api/videos
-  Watch page → all published videos from all users
-*/
-// const getAllVideos = asyncHandler(async (req, res) => {
-
-//   const pipeline = [
-//     {
-//       $match: { isPublished: true }
-//     },
-//     {
-//       $lookup: {
-//         from: "users",
-//         localField: "owner",
-//         foreignField: "_id",
-//         as: "owner"
-//       }
-//     },
-//     {
-//       $unwind: "$owner"
-//     },
-//     {
-//       $sort: { createdAt: -1 }
-//     },
-//     {
-//       $project: {
-//         videoFile: 1,
-//         thumbnail: 1,
-//         title: 1,
-//         discription: 1,
-//         duration: 1,
-//         views: 1,
-//         createdAt: 1,
-
-//         "owner._id": 1,
-//         "owner.username": 1,
-//         "owner.fullname": 1,
-//         "owner.avatar": 1
-//       }
-//     }
-//   ];
-
-//   const videos = await Video.aggregate(pipeline);
-
-//   return res
-//     .status(200)
-//     .json(new ApiResponse(200, videos, "Videos fetched successfully"));
-// });
-
-
-// /*
-//   GET /api/videos/:videoId
-//   Watch single video page
-// */
-// const getVideoById = asyncHandler(async (req, res) => {
-//   const { videoId } = req.params;
-
-//   if (!mongoose.Types.ObjectId.isValid(videoId)) {
-//     throw new ApiError(400, "Invalid video id");
-//   }
-
-//   const video = await Video.aggregate([
-//     {
-//       $match: { _id: new mongoose.Types.ObjectId(videoId), isPublished: true }
-//     },
-//     {
-//       $lookup: {
-//         from: "users",
-//         localField: "owner",
-//         foreignField: "_id",
-//         as: "owner"
-//       }
-//     },
-//     { $unwind: "$owner" },
-//     {
-//       $project: {
-//         videoFile: 1,
-//         thumbnail: 1,
-//         title: 1,
-//         discription: 1,
-//         duration: 1,
-//         views: 1,
-//         createdAt: 1,
-
-//         "owner._id": 1,
-//         "owner.username": 1,
-//         "owner.avatar": 1,
-//         "owner.fullname": 1
-//       }
-//     }
-//   ]);
-
-//   if (!video.length) {
-//     throw new ApiError(404, "Video not found");
-//   }
-
-//   // increase views
-//   await Video.findByIdAndUpdate(videoId, { $inc: { views: 1 } });
-
-//   return res
-//     .status(200)
-//     .json(new ApiResponse(200, video[0], "Video fetched successfully"));
-// });
-
-
-// /*
-//   GET /api/videos/channel/:channelId
-//   All videos of one channel
-// */
-// const getChannelVideos = asyncHandler(async (req, res) => {
-//   const { channelId } = req.params;
-
-//   if (!mongoose.Types.ObjectId.isValid(channelId)) {
-//     throw new ApiError(400, "Invalid channel id");
-//   }
-
-//   const videos = await Video.aggregate([
-//     {
-//       $match: {
-//         owner: new mongoose.Types.ObjectId(channelId),
-//         isPublished: true
-//       }
-//     },
-//     {
-//       $lookup: {
-//         from: "users",
-//         localField: "owner",
-//         foreignField: "_id",
-//         as: "owner"
-//       }
-//     },
-//     { $unwind: "$owner" },
-//     { $sort: { createdAt: -1 } },
-//     {
-//       $project: {
-//         videoFile: 1,
-//         thumbnail: 1,
-//         title: 1,
-//         duration: 1,
-//         views: 1,
-//         createdAt: 1,
-//         "owner.username": 1,
-//         "owner.avatar": 1
-//       }
-//     }
-//   ]);
-
-//   return res
-//     .status(200)
-//     .json(new ApiResponse(200, videos, "Channel videos fetched successfully"));
-// });
 
 export {
     // getAllVideos,
@@ -289,6 +204,9 @@ export {
     getPhotoByIdController,
     getAllPhotos,
     addToHistoryPhoto,
-    getHistoryPhoto
+    getHistoryPhoto,
+    addToLikedPhoto,
+    getLikedPhoto,
+    deleteLikedPhoto
 
 }

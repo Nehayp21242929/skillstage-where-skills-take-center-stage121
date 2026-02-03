@@ -8,7 +8,11 @@ import {
   getPhotoByIdController,
   getAllPhotos,
   addToHistoryPhoto,
-  getHistoryPhoto
+  getHistoryPhoto,
+  addToLikedPhoto,
+  getLikedPhoto,
+  deleteLikedPhoto
+
 } from "../controllers/photo.controller.js";
 
 import { upload } from "../middlewares/multer.middleware.js";
@@ -34,6 +38,17 @@ router.route("/addHistory").post(verifyJWT, addToHistoryPhoto);
 
 // get watch history of logged-in user
 router.route("/getHistory").get(verifyJWT, getHistoryPhoto);
+
+router.route("/addLiked").post(verifyJWT, addToLikedPhoto);
+
+
+// get watch history of logged-in user
+router.route("/getLiked").get(verifyJWT, getLikedPhoto);
+
+router.route("/deleteLiked/:photoId").delete(verifyJWT,deleteLikedPhoto);
+
+
+
 
 
 export default router;
