@@ -44,7 +44,7 @@ export default function LikedVideos() {
               {item.video.title}
             </h3>
             <p className="text-sm text-slate-500">
-              Watched on {new Date(item.watchedAt).toLocaleDateString()}
+              Liked on {new Date(item.watchedAt).toLocaleDateString()}
             </p>
           </div>
         </Link>
