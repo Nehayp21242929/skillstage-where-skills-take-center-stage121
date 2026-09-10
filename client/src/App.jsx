@@ -11,10 +11,17 @@ import UploadVideo from "./uploading/UploadVideo";
 import UploadForm from "./uploading/UploadForm";
 import UploadPhoto from "./uploading/UploadPhoto";
 import { AuthProvider } from "./context/AuthContext";
+import { useLoading } from "./context/LoadingContext";
+import LoadingOverlay from "./components/LoadingOverlay";
 
 function App() {
 
+  const { loading } = useLoading();
+
   return (
+    <>
+
+    {loading && <LoadingOverlay />}
     <AuthProvider>
       <Navbar/>
       <Routes>
@@ -31,6 +38,8 @@ function App() {
 
       </Routes>
     </AuthProvider>
+
+    </>
   );
 }
 

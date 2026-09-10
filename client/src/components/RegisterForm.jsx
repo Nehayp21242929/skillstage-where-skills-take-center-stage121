@@ -29,6 +29,14 @@ const RegisterForm = ({ onSuccess }) => {
       const res = await registerUser(data);
       setUser(res.data.data.user); 
       onSuccess();
+      
+      alert("Registration successful!");
+      setFullname("");
+      setEmail("");
+      setUsername("");
+      setPassword("");
+      setAvatar(null);
+      setCoverImage(null);
     } catch (err) {
       alert(err.response?.data?.message || "Registration failed");
     }

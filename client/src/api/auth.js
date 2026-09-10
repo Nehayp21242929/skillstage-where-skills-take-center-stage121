@@ -1,9 +1,30 @@
 import axios from "axios"
 
 const API = axios.create({
-  baseURL: "https://skillstage-where-skills-take-center-h12u.onrender.com/api/v1", 
+  baseURL: "http://localhost:8000/api/v1", 
   withCredentials: true
 })
+
+// ✅ ADD THIS — attaches token to every request
+API.interceptors.request.use((config) => {
+  const token = localStorage.getItem("accessToken")
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`
+  }
+  window.dispatchEvent(new Event("api-loading-start"));
+  return config
+})
+// Hide loading after request succeeds
+API.interceptors.response.use(
+  (response) => {
+    window.dispatchEvent(new Event("api-loading-end"));
+    return response;
+  },
+  (error) => {
+    window.dispatchEvent(new Event("api-loading-end"));
+    return Promise.reject(error);
+  }
+);
 
 // REGISTER
 export const registerUser = (formData) => {

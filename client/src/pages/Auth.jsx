@@ -22,7 +22,7 @@ const Auth = () => {
         {isLogin ? (
           <LoginForm onSuccess={() => navigate("/")} />
         ) : (
-          <RegisterForm onSuccess={() => navigate("/")} />
+          <RegisterForm onSuccess={() => navigate("/login")} />
         )}
 
         <p className="text-center mt-4 text-sm text-gray-600 dark:text-gray-300">
