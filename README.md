@@ -219,7 +219,7 @@ SkillStage/
 └── ...
 ⚙️ Installation & Setup
 1. Clone the repository
-git clone https://github.com/Nehayp21242929/skillstage-where-skills-take-center-stage1.git
+git clone https://github.com/Nehayp21242929/skillstage-where-skills-take-center-stage121.git
 
 cd skillstage-where-skills-take-center-stage1
 2. Install dependencies
@@ -304,6 +304,7 @@ Project bookmarking
 Recommendation explanations
 Recommendation evaluation using offline metrics
 Scalable search infrastructure
+
 🎯 Problem Statement
 
 Developers often build projects but struggle to discover relevant projects that match a particular technology stack, domain, or problem space.
